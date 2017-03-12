@@ -74,6 +74,7 @@ $('#js-shopping-list-form').on('submit', function(event) {
 
 function deleteItemButton() {
   $('.shopping-item-delete').on('click', function() {
+    console.log($(this).closest('li').child('.shopping-item');
     currentindex = $(this).index();
     deleteItem(state, currentindex);
     $(this).remove();
@@ -83,7 +84,7 @@ function deleteItemButton() {
 
 function checkItemButton() {
 
-  console.log($(this).index());
+
   checkItemIndex = $(this).index();
 
   checkItem(state, checkItemIndex);
