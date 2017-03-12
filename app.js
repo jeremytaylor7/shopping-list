@@ -1,10 +1,13 @@
 var state = {
-  items: []
+  items: [{itemName:'apples', checked: false},
+          {itemName:'oranges', checked: false},
+          {itemName:'bread', checked: false},
+          {itemName:'milk', checked: true}]
 }
 
 var renderHTML = 
      '<li>'+
-        '<span class="shopping-item">$itemname</span>'+
+        '<span class="shopping-item $checked">$itemname</span>'+
         '<div class="shopping-item-controls">'+
           '<button class="shopping-item-toggle">'+
             '<span class="button-label">check</span>'+
@@ -34,16 +37,21 @@ function deleteItem(state, index) {
 
 
 //render functions
+function renderItem(x) {    
+  var checked = "";
+     return renderHTML
+      .replace('$itemname',x.itemName )
+      .replace("$checked", checked);
 
+
+  
+  }
 function render(state) {
   
 
-  state.items.map(function(x) {
-    
-    $('.shopping-list').append(renderHTML.replace('$itemname',x.itemName ));
-    
-    
-  });
+  var renderedItems = state.items.map(renderItem);
+  $('.shopping-list').html(renderedItems.join(''));
+
 
   addItemSubmit();
   deleteItemButton();
@@ -75,7 +83,9 @@ function deleteItemButton() {
 
 function checkItemButton() {
 
+  console.log($(this).index());
   checkItemIndex = $(this).index();
+
   checkItem(state, checkItemIndex);
 
 
