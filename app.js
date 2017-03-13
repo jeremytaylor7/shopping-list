@@ -6,7 +6,7 @@ var state = {
 }
 
 var renderHTML = 
-     '<li>'+
+     '<li id="yoid">'+
         '<span class="shopping-item $checked">$itemname</span>'+
         '<div class="shopping-item-controls">'+
           '<button class="shopping-item-toggle">'+
@@ -28,6 +28,10 @@ function checkItem(state, index) {
   if (state.items[index].checked !== true) {
     state.items[index].checked = true;  
   }
+
+  else {
+    state.items[index].checked = false;
+  }
 }
 
 function deleteItem(state, index) {
@@ -37,14 +41,14 @@ function deleteItem(state, index) {
 
 
 //render functions
-function renderItem(x) {    
+function renderItem(x, index) {    
   var checked = "";
+  var id = index
      return renderHTML
       .replace('$itemname',x.itemName )
-      .replace("$checked", checked);
+      .replace("$checked", checked)
+      .replace("yoid", index);
 
-
-  
   }
 function render(state) {
   
@@ -74,21 +78,26 @@ $('#js-shopping-list-form').on('submit', function(event) {
 
 function deleteItemButton() {
   $('.shopping-item-delete').on('click', function() {
-    console.log($(this).closest('li').child('.shopping-item');
-    currentindex = $(this).index();
-    deleteItem(state, currentindex);
-    $(this).remove();
+
+    alert($(this).parents('li').attr('id'))
   })
-  
 }
+
 
 function checkItemButton() {
 
+$('.shopping-item-toggle').on('click', function() {
 
-  checkItemIndex = $(this).index();
+ var theindex = $(this).parents('li').attr('id')
 
-  checkItem(state, checkItemIndex);
+  state.items.map(function (x, indexx) {
+    if (indexx === theindex) {
 
+      alert('we have found a match!')
+    }
+
+  })
+})
 
 }
 
