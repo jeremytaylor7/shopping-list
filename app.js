@@ -6,7 +6,7 @@ var state = {
 }
 
 var renderHTML = 
-     '<li id="yoid">'+
+     '<li id="$id">'+
         '<span class="shopping-item $checked">$itemname</span>'+
         '<div class="shopping-item-controls">'+
           '<button class="shopping-item-toggle">'+
@@ -24,6 +24,11 @@ function addItem(state, item) {
   state.items.push({itemName:item, checked: false});
 }
 
+function grabId(state, index) {
+
+  return index;
+}
+
 function checkItem(state, index) {
   if (state.items[index].checked !== true) {
     state.items[index].checked = true;  
@@ -36,20 +41,29 @@ function checkItem(state, index) {
 
 function deleteItem(state, index) {
   
-  state.items[index].splice(index, 1);
+  state.items.splice(index, 1);
 }
 
 
 //render functions
-function renderItem(x, index) {    
-  var checked = "";
-  var id = index
-     return renderHTML
-      .replace('$itemname',x.itemName )
-      .replace("$checked", checked)
-      .replace("yoid", index);
+function renderItem(item, index) {    
+  var checkedClass = "";
+  var id = index;
+  if (item.checked) {
+
+    checkedClass = 'shopping-item-checked';
 
   }
+    
+  return renderHTML
+    .replace('$itemname',item.itemName )
+    .replace("$checked", checkedClass)
+    .replace("$id", id);
+
+
+
+  }
+
 function render(state) {
   
 
@@ -57,7 +71,7 @@ function render(state) {
   $('.shopping-list').html(renderedItems.join(''));
 
 
-  addItemSubmit();
+
   deleteItemButton();
   checkItemButton();
 }
@@ -68,9 +82,11 @@ function render(state) {
 function addItemSubmit() {
 $('#js-shopping-list-form').on('submit', function(event) {
   event.preventDefault();
+  console.log('12345')
   var itemadd = $('#shopping-list-entry').val();
   addItem(state, itemadd);
   render(state);
+
 
   
 })
@@ -78,8 +94,10 @@ $('#js-shopping-list-form').on('submit', function(event) {
 
 function deleteItemButton() {
   $('.shopping-item-delete').on('click', function() {
+    var theindex = parseInt($(this).parents('li').attr('id'));
 
-    alert($(this).parents('li').attr('id'))
+    deleteItem(state, theindex);
+    render(state);
   })
 }
 
@@ -88,21 +106,19 @@ function checkItemButton() {
 
 $('.shopping-item-toggle').on('click', function() {
 
- var theindex = $(this).parents('li').attr('id')
+  var theindex = parseInt($(this).parents('li').attr('id'));
 
-  state.items.map(function (x, indexx) {
-    if (indexx === theindex) {
+  checkItem(state, theindex);
+  render(state);
 
-      alert('we have found a match!')
-    }
-
-  })
 })
-
 }
 
 //on-load callbacks
 $(function() {
+  addItemSubmit();
   render(state);
+
+
 })
 
